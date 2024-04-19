@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bv47yy363l1bb"]
+
+[ext_resource type="Script" path="res://cell.gd" id="1_m4v1y"]
+
+[node name="Cell" type="TextureButton" groups=["cells"]]
+custom_minimum_size = Vector2(10, 10)
+offset_right = 10.0
+offset_bottom = 10.0
+stretch_mode = 0
+script = ExtResource("1_m4v1y")

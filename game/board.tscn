@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://djahqxlcbinjp"]
+
+[ext_resource type="Script" path="res://board.gd" id="1_o7lpq"]
+
+[node name="Board" type="GridContainer"]
+theme_override_constants/h_separation = 1
+theme_override_constants/v_separation = 1
+columns = 42
+script = ExtResource("1_o7lpq")
