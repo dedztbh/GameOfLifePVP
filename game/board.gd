@@ -2,8 +2,8 @@ extends GridContainer
 
 signal next_iteration
 
-var life_driver : LifeDriver
-var cells : Array
+var cells = []
+var life_driver = LifeDriver.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -14,7 +14,7 @@ func _ready():
 			new_cell.custom_minimum_size = Vector2(10, 10)
 			add_child(new_cell)
 			cells[-1].append(new_cell)
-	life_driver = LifeDriver.new()
+
 	life_driver.update_cell.connect(_update_cell)
 	life_driver.update_done.connect(_update_done)
 	next_iteration.connect(life_driver.next_iteration)
