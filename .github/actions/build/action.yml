@@ -29,7 +29,7 @@ runs:
   steps:
 # Android only
     - name: Android - Set up Java 11
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       if: ${{ inputs.platform == 'android' }}
       with:
         distribution: temurin
@@ -39,7 +39,7 @@ runs:
       uses: nttld/setup-ndk@v1
       if: ${{ inputs.platform == 'android' }}
       with:
-        ndk-version: r23c
+        ndk-version: r26
         link-to-sdk: true
 # Linux only
     - name: Linux - dependencies
@@ -51,7 +51,7 @@ runs:
 # Web only
     - name: Web - Set up Emscripten latest
       if: ${{ inputs.platform == 'web' }}
-      uses: mymindstorm/setup-emsdk@v13
+      uses: mymindstorm/setup-emsdk@v14
       with:
         version: ${{ inputs.em_version }}
         actions-cache-folder: ${{ inputs.em_cache_folder }}.${{ inputs.float-precision }}.${{ inputs.build-target-type }}

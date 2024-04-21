@@ -17,8 +17,10 @@ offset_bottom = 31.0
 script = ExtResource("2_avnxl")
 
 [node name="License" type="Label" parent="CanvasLayer"]
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 6.0
+offset_top = 42.0
+offset_right = 46.0
+offset_bottom = 65.0
 script = ExtResource("2_qsvb4")
 
 [node name="Camera2D" type="Camera2D" parent="."]

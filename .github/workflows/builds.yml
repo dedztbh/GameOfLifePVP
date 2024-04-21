@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  LIBNAME: example
+  LIBNAME: lifepvp
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
           - platform: linux
             float-precision: single
             arch: x86_64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - platform: windows
             float-precision: single
             arch: x86_32
@@ -24,39 +24,39 @@ jobs:
             float-precision: single
             arch: x86_64
             os: windows-latest
-          - platform: macos
-            float-precision: single
-            arch: universal
-            os: macos-latest
+          # - platform: macos
+          #   float-precision: single
+          #   arch: universal
+          #   os: macos-latest
           - platform: android
             float-precision: single
             arch: arm64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - platform: android
             float-precision: single
             arch: arm32
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - platform: android
             float-precision: single
             arch: x86_64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - platform: android
             float-precision: single
             arch: x86_32
-            os: ubuntu-20.04
-          - platform: ios
-            float-precision: single
-            arch: arm64
-            os: macos-latest
+            os: ubuntu-22.04
+          # - platform: ios
+          #   float-precision: single
+          #   arch: arm64
+          #   os: macos-latest
           - platform: web
             float-precision: single
             arch: wasm32
-            os: ubuntu-20.04
+            os: ubuntu-22.04
 
           - platform: linux
             float-precision: double
             arch: x86_64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - platform: windows
             float-precision: double
             arch: x86_32
@@ -65,34 +65,34 @@ jobs:
             float-precision: double
             arch: x86_64
             os: windows-latest
-          - platform: macos
-            float-precision: double
-            arch: universal
-            os: macos-latest
+          # - platform: macos
+          #   float-precision: double
+          #   arch: universal
+          #   os: macos-latest
           - platform: android
             float-precision: double
             arch: arm64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - platform: android
             float-precision: double
             arch: arm32
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - platform: android
             float-precision: double
             arch: x86_64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - platform: android
             float-precision: double
             arch: x86_32
-            os: ubuntu-20.04
-          - platform: ios
-            float-precision: double
-            arch: arm64
-            os: macos-latest
+            os: ubuntu-22.04
+          # - platform: ios
+          #   float-precision: double
+          #   arch: arm64
+          #   os: macos-latest
           - platform: web
             float-precision: double
             arch: wasm32
-            os: ubuntu-20.04
+            os: ubuntu-22.04
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -118,20 +118,20 @@ jobs:
           float-precision: ${{ matrix.float-precision }}
           build-target-type: template_release
 # Sign
-      - name: Mac Sign
-        # Disable sign if secrets are not set
-        if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}
-        env:
-          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
-        uses: ./.github/actions/sign
-        with:
-          FRAMEWORK_PATH: bin/macos/macos.framework
-          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
-          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
-          APPLE_DEV_PASSWORD: ${{ secrets.APPLE_DEV_PASSWORD }}
-          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
-          APPLE_DEV_TEAM_ID: ${{ secrets.APPLE_DEV_TEAM_ID }}
-          APPLE_DEV_APP_ID: ${{ secrets.APPLE_DEV_APP_ID }}
+      # - name: Mac Sign
+      #   # Disable sign if secrets are not set
+      #   if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}
+      #   env:
+      #     APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
+      #   uses: ./.github/actions/sign
+      #   with:
+      #     FRAMEWORK_PATH: bin/macos/macos.framework
+      #     APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
+      #     APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+      #     APPLE_DEV_PASSWORD: ${{ secrets.APPLE_DEV_PASSWORD }}
+      #     APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+      #     APPLE_DEV_TEAM_ID: ${{ secrets.APPLE_DEV_TEAM_ID }}
+      #     APPLE_DEV_APP_ID: ${{ secrets.APPLE_DEV_APP_ID }}
 
       - name: Windows - Delete compilation files
         if: ${{ matrix.platform == 'windows' }}

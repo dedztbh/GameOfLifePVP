@@ -50,7 +50,17 @@ env.Alias("compiledb", compilation_db)
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
-env.Append(CXXFLAGS=["-std=c++20"])
+# Use user provided CXX if needed
+if "CXX" in os.environ:
+    env["CXX"] = os.environ["CXX"]
+
+if env["platform"] == "windows":
+    env.Append(CXXFLAGS=["/std:c++20"])
+else:
+    env.Append(CXXFLAGS=["-std=c++20"])
+
+print("Platform:", env["platform"])
+print("C++ Compiler:", env["CXX"])
 
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
