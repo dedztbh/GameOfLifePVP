@@ -12,41 +12,23 @@
 
 using namespace godot;
 
+using namespace lifepvp::engine;
+
 void LifeDriver::setup(const size_t w, const size_t h, const Variant& init_board, const EngineType engine) {
 
-	const auto init_board_to_vec = [&]() {
-		const PackedByteArray& array = std::forward<PackedByteArray>(init_board);
-		static_assert(sizeof(*(array.ptr())) == sizeof(EngineBase::state_t));
-		std::vector<EngineBase::state_t> vec(w * h);
-		memcpy(vec.data(), array.ptr(), sizeof(EngineBase::state_t) * vec.size());
-		return vec;
-	};
-
-	const auto get_board_vec = [&]() {
-		switch (init_board.get_type()) {
-			case Variant::NIL:
-				return std::vector<EngineBase::state_t>(w * h);
-
-			case Variant::PACKED_BYTE_ARRAY:
-				return init_board_to_vec();
-				break;
-
-			default:
-				ERR_PRINT("Unknown init_board type");
-				return std::vector<EngineBase::state_t>{};
-		}
-	};
+	const auto update_cell_cb = [&](size_t i, size_t j, uint8_t state) { emit_signal("update_cell", i, j, state); };
+	const auto update_done_cb = [&]() { emit_signal("update_done"); };
 
 	switch (engine) {
 		case BASIC:
-			m_engine = std::make_unique<BasicEngine>(get_board_vec(), w, h, 
-				[&](size_t i, size_t j, uint8_t state) {
-					emit_signal("update_cell", i, j, state);
-				},
-				[&]() {
-					emit_signal("update_done");
-				}
-			);
+			if (init_board.get_type() == Variant::NIL) {
+				std::vector<EngineBase::state_t> board(w * h);
+				m_engine = std::make_unique<BasicEngine<>>(std::move(board), w, h, update_cell_cb, update_done_cb);
+			} else if (init_board.get_type() == Variant::PACKED_BYTE_ARRAY) {
+				m_engine = std::make_unique<BasicEngine<PackedByteArray>>(init_board, w, h, update_cell_cb, update_done_cb);
+			} else {
+				ERR_PRINT("Unknown init_board type");
+			}
 			break;
 
 		default:
@@ -56,7 +38,9 @@ void LifeDriver::setup(const size_t w, const size_t h, const Variant& init_board
 }
 
 void LifeDriver::next_iteration() {
-	m_engine->next_iteration();
+	if (m_engine) {
+		m_engine->next_iteration();
+	}
 }
 
 void LifeDriver::_bind_methods() {

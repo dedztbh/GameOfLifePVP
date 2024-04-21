@@ -50,6 +50,8 @@ env.Alias("compiledb", compilation_db)
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
+env.Append(CXXFLAGS=["-std=c++20"])
+
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 

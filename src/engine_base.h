@@ -4,6 +4,8 @@
 #include <functional>
 #include <cstdint>
 
+namespace lifepvp::engine {
+
 class EngineBase {
 public:
     using state_t = uint8_t;
@@ -25,5 +27,7 @@ protected:
     const update_cb_t m_update_cb;
     const done_cb_t m_done_cb;
 };
+
+}
 
 #endif

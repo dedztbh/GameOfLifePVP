@@ -26,7 +26,7 @@ protected:
 	static void _bind_methods();
 
 private:
-	std::unique_ptr<EngineBase> m_engine;
+	std::unique_ptr<lifepvp::engine::EngineBase> m_engine;
 };
 
 }
