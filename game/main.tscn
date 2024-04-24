@@ -1,11 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://dss4vqph6ixgk"]
+[gd_scene load_steps=6 format=3 uid="uid://dss4vqph6ixgk"]
 
-[ext_resource type="PackedScene" uid="uid://djahqxlcbinjp" path="res://board.tscn" id="1_i8xh8"]
+[ext_resource type="Script" path="res://main.gd" id="1_ka4cq"]
 [ext_resource type="Script" path="res://FPSCounter.gd" id="2_avnxl"]
 [ext_resource type="Script" path="res://License.gd" id="2_qsvb4"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="2_wwmnb"]
+[ext_resource type="Script" path="res://LoadBoardDialog.gd" id="3_1cdhg"]
 
 [node name="Main" type="Node"]
+script = ExtResource("1_ka4cq")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -23,12 +25,29 @@ offset_right = 46.0
 offset_bottom = 65.0
 script = ExtResource("2_qsvb4")
 
+[node name="LoadBoardDialog" type="FileDialog" parent="CanvasLayer"]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(800, 600)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray(".csv")
+use_native_dialog = true
+script = ExtResource("3_1cdhg")
+
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(500, 300)
 script = ExtResource("2_wwmnb")
 speed = 500
 zoom_speed = 0.5
-min_zoom = 1.0
 
-[node name="Board" parent="." instance=ExtResource("1_i8xh8")]
-columns = 100
+[node name="LoadBoardButton" type="Button" parent="."]
+offset_left = -112.0
+offset_top = 9.0
+offset_right = -15.0
+offset_bottom = 40.0
+text = "Load Board"
+
+[connection signal="file_selected" from="CanvasLayer/LoadBoardDialog" to="." method="_on_load_board_dialog_file_selected"]
+[connection signal="button_down" from="LoadBoardButton" to="CanvasLayer/LoadBoardDialog" method="_on_load_board_button_button_down"]

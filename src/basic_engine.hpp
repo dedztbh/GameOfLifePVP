@@ -37,15 +37,16 @@ public:
 			const size_t h,
 			const update_cb_t update_cb,
 			const done_cb_t done_cb) :
-			EngineBase(w, h, update_cb, done_cb) {
-		if constexpr (BoardConstructibleBySize<board_t>) {
-			m_board_pair = { board, board_t(board.size()) };
-		} else {
-			static_assert(BoardResizable<board_t>);
-			m_board_pair = { board, board_t() };
-			m_board_pair[1].resize(w * h);
-		}
-	}
+			EngineBase(w, h, update_cb, done_cb), m_board_pair([&]() {
+				if constexpr (BoardConstructibleBySize<board_t>) {
+					return decltype(m_board_pair){ std::move(board), board_t(board.size()) };
+				} else {
+					static_assert(BoardResizable<board_t>);
+					decltype(m_board_pair) board_pair{ std::move(board), board_t() };
+					board_pair[1].resize(w * h);
+					return board_pair;
+				}
+			}()) {}
 
 	virtual ~BasicEngine() = default;
 

@@ -54,10 +54,20 @@ env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 if "CXX" in os.environ:
     env["CXX"] = os.environ["CXX"]
 
+# Function to replace a specific flag
+def replace_flag(env, old_flag, new_flag):
+    cxxflags = env["CXXFLAGS"]
+    if old_flag in cxxflags:
+        index = cxxflags.index(old_flag)
+        cxxflags[index] = new_flag
+        env.Replace(CXXFLAGS=cxxflags)
+    else:
+        env.Append(CXXFLAGS=[new_flag])
+
 if env["platform"] == "windows":
-    env.Append(CXXFLAGS=["/std:c++20"])
+    replace_flag(env, "/std:c++17", "/std:c++20")
 else:
-    env.Append(CXXFLAGS=["-std=c++20"])
+    replace_flag(env, "-std=c++17", "-std=c++20")
 
 print("Platform:", env["platform"])
 print("C++ Compiler:", env["CXX"])

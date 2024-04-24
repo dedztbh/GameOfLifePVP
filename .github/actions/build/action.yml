@@ -39,7 +39,7 @@ runs:
       uses: nttld/setup-ndk@v1
       if: ${{ inputs.platform == 'android' }}
       with:
-        ndk-version: r26
+        ndk-version: r23c
         link-to-sdk: true
 # Linux only
     - name: Linux - dependencies

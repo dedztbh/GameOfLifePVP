@@ -1,6 +1,5 @@
 #include "life_driver.hpp"
 
-#include <cstring>
 #include <vector>
 
 #include <godot_cpp/core/class_db.hpp>
@@ -20,8 +19,7 @@ void LifeDriver::setup(const size_t w, const size_t h, const Variant &init_board
 	switch (engine) {
 		case BASIC:
 			if (init_board.get_type() == Variant::NIL) {
-				std::vector<EngineBase::state_t> board(w * h);
-				m_engine = std::make_unique<BasicEngine<>>(std::move(board), w, h, update_cell_cb, update_done_cb);
+				m_engine = std::make_unique<BasicEngine<>>(std::vector<EngineBase::state_t>(w * h), w, h, update_cell_cb, update_done_cb);
 			} else if (init_board.get_type() == Variant::PACKED_BYTE_ARRAY) {
 				m_engine = std::make_unique<BasicEngine<PackedByteArray>>(init_board, w, h, update_cell_cb, update_done_cb);
 			} else {
