@@ -15,13 +15,14 @@ func _ready():
 	bytearray[2 * 100 + 1] = 1
 	bytearray[2 * 100 + 2] = 1
 	board.init_matrix = bytearray
+	board.rows = 100
 	board.columns = 100
 	add_child(board)
 
 
 func _on_load_board_dialog_file_selected(path):
 	if board != null:
-		remove_child(board)
+		board.queue_free()
 		
 	var file = FileAccess.open(path, FileAccess.READ)
 	if not file:
@@ -53,5 +54,5 @@ func _on_load_board_dialog_file_selected(path):
 	board = board_scene.instantiate()
 	board.init_matrix = result
 	board.columns = width
-	assert(width == height) # temporary restriction
+	board.rows = height
 	add_child(board)

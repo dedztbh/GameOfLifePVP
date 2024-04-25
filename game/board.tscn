@@ -5,7 +5,7 @@
 [node name="Board" type="GridContainer"]
 theme_override_constants/h_separation = 1
 theme_override_constants/v_separation = 1
-columns = 42
+columns = 64
 script = ExtResource("1_o7lpq")
 
 [node name="Timer" type="Timer" parent="."]

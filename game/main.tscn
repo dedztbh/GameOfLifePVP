@@ -32,7 +32,7 @@ size = Vector2i(800, 600)
 ok_button_text = "Open"
 file_mode = 0
 access = 2
-filters = PackedStringArray(".csv")
+filters = PackedStringArray("*.csv")
 use_native_dialog = true
 script = ExtResource("3_1cdhg")
 
