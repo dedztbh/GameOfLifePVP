@@ -49,5 +49,27 @@ offset_right = -15.0
 offset_bottom = 40.0
 text = "Load Board"
 
+[node name="SpeedUpButton" type="Button" parent="."]
+offset_left = -101.0
+offset_top = -50.0
+offset_right = -19.0
+offset_bottom = -19.0
+text = "Speed Up"
+
+[node name="SlowDownButton" type="Button" parent="."]
+offset_left = 8.0
+offset_top = -49.0
+offset_right = 102.0
+offset_bottom = -18.0
+text = "Slow Down"
+
+[node name="CurrentSpeed" type="Label" parent="."]
+offset_left = 131.0
+offset_top = -46.0
+offset_right = 216.0
+offset_bottom = -23.0
+
 [connection signal="file_selected" from="CanvasLayer/LoadBoardDialog" to="." method="_on_load_board_dialog_file_selected"]
 [connection signal="button_down" from="LoadBoardButton" to="CanvasLayer/LoadBoardDialog" method="_on_load_board_button_button_down"]
+[connection signal="pressed" from="SpeedUpButton" to="." method="_on_speed_up_button_pressed"]
+[connection signal="pressed" from="SlowDownButton" to="." method="_on_slow_down_button_pressed"]

@@ -34,8 +34,9 @@ void LifeDriver::setup(const size_t w, const size_t h, const Variant &init_board
 }
 
 void LifeDriver::next_iteration() {
-	if (m_engine) {
+	if (m_engine && !is_busy.exchange(true)) {
 		m_engine->next_iteration();
+		is_busy = false;
 	}
 }
 

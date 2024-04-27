@@ -1,10 +1,11 @@
 extends GridContainer
 
 signal next_iteration
+signal speed_changed
 
-@export var init_matrix : PackedByteArray
 @export var rows = 64
 
+var init_matrix : Variant = null
 var cells = []
 var life_driver = LifeDriver.new()
 
@@ -17,15 +18,16 @@ func _ready():
 			new_cell.custom_minimum_size = Vector2(10, 10)
 			add_child(new_cell)
 			cells[-1].append(new_cell)
-			if init_matrix != null and not init_matrix.is_empty():
+			if init_matrix != null:
 				_update_cell(i, j, init_matrix[i * columns + j])
 
 	life_driver.update_cell.connect(_update_cell)
 	life_driver.update_done.connect(_update_done)
 	next_iteration.connect(life_driver.next_iteration)
 	
-	var matrix = init_matrix if (init_matrix != null and not init_matrix.is_empty()) else null
-	life_driver.setup(rows, columns, matrix, LifeDriver.BASIC)
+	life_driver.setup(rows, columns, init_matrix, LifeDriver.BASIC)
+	
+	emit_signal("speed_changed", 1 / $Timer.wait_time)
 
 
 func _update_cell(i: int, j: int, state: int):
@@ -39,7 +41,7 @@ func _on_timer_timeout():
 	emit_signal("next_iteration")
 
 
-func _notification(what):
-	match what:
-		NOTIFICATION_PREDELETE:
-			life_driver.free()
+func change_speed(ratio):
+	$Timer.wait_time /= ratio
+	$Timer.start()
+	emit_signal("speed_changed", 1 / $Timer.wait_time)

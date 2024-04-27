@@ -48,10 +48,10 @@ jobs:
           #   float-precision: single
           #   arch: arm64
           #   os: macos-latest
-          - platform: web
-            float-precision: single
-            arch: wasm32
-            os: ubuntu-22.04
+          # - platform: web
+          #   float-precision: single
+          #   arch: wasm32
+          #   os: ubuntu-22.04
 
           - platform: linux
             float-precision: double
@@ -89,10 +89,10 @@ jobs:
           #   float-precision: double
           #   arch: arm64
           #   os: macos-latest
-          - platform: web
-            float-precision: double
-            arch: wasm32
-            os: ubuntu-22.04
+          # - platform: web
+          #   float-precision: double
+          #   arch: wasm32
+          #   os: ubuntu-22.04
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout

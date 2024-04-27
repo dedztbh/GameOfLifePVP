@@ -27,14 +27,14 @@ func _process(delta):
 	# Apply the motion to the camera's position
 	position += motion * delta
 
-	# Zoom in
-	if Input.is_action_pressed("ui_zoom_in"):
+	# Zoom out
+	if Input.is_action_pressed("ui_zoom_out"):
 		zoom = Vector2(zoom.x - zoom_speed * delta, zoom.y - zoom_speed * delta)
 		zoom.x = max(min_zoom, zoom.x)
 		zoom.y = max(min_zoom, zoom.y)
 
-	# Zoom out
-	if Input.is_action_pressed("ui_zoom_out"):
+	# Zoom in
+	if Input.is_action_pressed("ui_zoom_in"):
 		zoom = Vector2(zoom.x + zoom_speed * delta, zoom.y + zoom_speed * delta)
 		zoom.x = min(max_zoom, zoom.x)
 		zoom.y = min(max_zoom, zoom.y)

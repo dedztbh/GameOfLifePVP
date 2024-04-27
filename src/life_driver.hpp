@@ -1,6 +1,7 @@
 #ifndef LIFEPVP_LIFE_DRIVER_H
 #define LIFEPVP_LIFE_DRIVER_H
 
+#include <atomic>
 #include <memory>
 
 #include <godot_cpp/classes/node.hpp>
@@ -10,8 +11,8 @@
 
 namespace godot {
 
-class LifeDriver : public Object {
-	GDCLASS(LifeDriver, Object)
+class LifeDriver : public RefCounted {
+	GDCLASS(LifeDriver, RefCounted)
 
 public:
 	enum EngineType {
@@ -27,6 +28,8 @@ protected:
 
 private:
 	std::unique_ptr<lifepvp::engine::EngineBase> m_engine;
+	std::atomic_bool is_busy = false;
+	
 };
 
 } //namespace godot
