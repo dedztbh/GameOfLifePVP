@@ -27,7 +27,11 @@ concept BasicEngineContainer =
 	{ cboard[i] } -> std::convertible_to<EngineBase::state_t const &>;
 };
 
-template <BasicEngineContainer T = std::vector<EngineBase::state_t>>
+struct BasicEngineRuleset {
+	bool wrap_around = false;
+};
+
+template <BasicEngineRuleset Ruleset, BasicEngineContainer T = std::vector<EngineBase::state_t>>
 class BasicEngine : public EngineBase {
 public:
 	using board_t = std::remove_reference_t<T>;
@@ -63,7 +67,17 @@ public:
 				};
 				size_t count = 0;
 				for (const auto [x, y] : neighbor_offsets) {
-					if (at(curr_board, (x + W + i) % W, (y + H + j) % H)) {
+					const bool is_neighbor_alive = [&]() {
+						if constexpr (Ruleset.wrap_around) {
+							return at(curr_board, (x + W + i) % W, (y + H + j) % H);
+						} else {
+							const int64_t nx = x + i;
+							const int64_t ny = y + j;
+							return 0 <= nx && nx < W && 0 <= ny && ny < H && at(curr_board, nx, ny);
+						}
+					}();
+					
+					if (is_neighbor_alive) {
 						++count;
 					}
 				}

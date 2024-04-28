@@ -19,7 +19,7 @@ public:
 		BASIC
 	};
 
-	void setup(const size_t w, const size_t h, const Variant &init_board, const EngineType engine);
+	void setup(const size_t w, const size_t h, const Variant &init_board, const EngineType engine, const Variant& ruleset);
 
 	void next_iteration();
 

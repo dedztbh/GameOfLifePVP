@@ -8,6 +8,7 @@ signal speed_changed
 var init_matrix : Variant = null
 var cells = []
 var life_driver = LifeDriver.new()
+var ruleset = Dictionary()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -25,7 +26,7 @@ func _ready():
 	life_driver.update_done.connect(_update_done)
 	next_iteration.connect(life_driver.next_iteration)
 	
-	life_driver.setup(rows, columns, init_matrix, LifeDriver.BASIC)
+	life_driver.setup(rows, columns, init_matrix, LifeDriver.BASIC, ruleset)
 	
 	emit_signal("speed_changed", 1 / $Timer.wait_time)
 

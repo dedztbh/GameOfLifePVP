@@ -18,6 +18,7 @@ func _ready():
 	board.rows = 100
 	board.columns = 100
 	board.speed_changed.connect(board_speed_changed)
+	board.ruleset["wrap_around"] = $WrapAroundButton.button_pressed
 	add_child(board)
 
 
@@ -58,6 +59,7 @@ func _on_load_board_dialog_file_selected(path):
 	board.columns = width
 	board.rows = height
 	board.speed_changed.connect(board_speed_changed)
+	board.ruleset["wrap_around"] = $WrapAroundButton.button_pressed
 	add_child(board)
 
 

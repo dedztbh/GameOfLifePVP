@@ -1,5 +1,6 @@
 #include "life_driver.hpp"
 
+#include <tuple>
 #include <vector>
 
 #include <godot_cpp/core/class_db.hpp>
@@ -12,24 +13,49 @@ using namespace godot;
 
 using namespace lifepvp::engine;
 
-void LifeDriver::setup(const size_t w, const size_t h, const Variant &init_board, const EngineType engine) {
+// setup_engine_with_ruleset(tuple{bools...}, f) is same as f([]() { return Ruleset{bools...}; })
+// Except bools need not be constexpr for Ruleset{bools...} to be constexpr.
+template <class Ruleset, size_t I, bool... bools>
+auto setup_engine_with_ruleset(const auto &tup, const auto f) requires(I == 0) {
+	return f([]() { return Ruleset{ bools... }; });
+}
+
+template <class Ruleset, size_t I, bool... bools>
+auto setup_engine_with_ruleset(const auto &tup, const auto f) requires(0 < I && I <= std::tuple_size_v<std::remove_cvref_t<decltype(tup)>>) {
+	if (std::get<I - 1>(tup)) {
+		return setup_engine_with_ruleset<Ruleset, I - 1, bools..., true>(tup, f);
+	} else {
+		return setup_engine_with_ruleset<Ruleset, I - 1, bools..., false>(tup, f);
+	}
+}
+
+void LifeDriver::setup(const size_t w, const size_t h, const Variant &init_board, const EngineType engine, const Variant &ruleset) {
 	const auto update_cell_cb = [&](size_t i, size_t j, uint8_t state) { emit_signal("update_cell", i, j, state); };
 	const auto update_done_cb = [&]() { emit_signal("update_done"); };
 
-	switch (engine) {
-		case BASIC:
+	if (engine == BASIC) {
+		// workaround for not being able to pass constexpr Ruleset directly
+		const auto make_engine = [&](const auto get_ruleset) {
 			if (init_board.get_type() == Variant::NIL) {
-				m_engine = std::make_unique<BasicEngine<>>(std::vector<EngineBase::state_t>(w * h), w, h, update_cell_cb, update_done_cb);
+				m_engine = std::make_unique<BasicEngine<get_ruleset()>>(std::vector<EngineBase::state_t>(w * h), w, h, update_cell_cb, update_done_cb);
 			} else if (init_board.get_type() == Variant::PACKED_BYTE_ARRAY) {
-				m_engine = std::make_unique<BasicEngine<PackedByteArray>>(init_board, w, h, update_cell_cb, update_done_cb);
+				m_engine = std::make_unique<BasicEngine<get_ruleset(), PackedByteArray>>(init_board, w, h, update_cell_cb, update_done_cb);
 			} else {
-				ERR_PRINT("Unknown init_board type");
+				ERR_PRINT("Unknown init_board type, should be either null or PackedByteArray");
 			}
-			break;
-
-		default:
-			ERR_PRINT("Unknown engine type");
-			return;
+		};
+		if (ruleset.get_type() == Variant::NIL) {
+			make_engine([](){ return BasicEngineRuleset{}; });
+		} else if (ruleset.get_type() == Variant::DICTIONARY) {
+			const Dictionary& dict = ruleset;
+			const auto tup = std::make_tuple<bool>(dict.get(String("wrap_around"), false));
+			setup_engine_with_ruleset<BasicEngineRuleset, std::tuple_size_v<decltype(tup)>>(tup, make_engine);
+		} else {
+				ERR_PRINT("Unknown init_board type, should be either null or PackedByteArray");
+		}
+	} else {
+		ERR_PRINT("Unknown engine type");
+		return;
 	}
 }
 
