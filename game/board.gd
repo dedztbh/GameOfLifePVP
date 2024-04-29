@@ -9,6 +9,7 @@ var init_matrix : Variant = null
 var cells = []
 var life_driver = LifeDriver.new()
 var ruleset = Dictionary()
+const colors = [Color.WHITE, Color.BLACK, Color.RED]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -32,7 +33,7 @@ func _ready():
 
 
 func _update_cell(i: int, j: int, state: int):
-	cells[i][j].color = Color.BLACK if state else Color.WHITE
+	cells[i][j].color = colors[state]
 
 func _update_done():
 	pass

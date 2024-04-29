@@ -39,9 +39,8 @@ public:
 	BasicEngine(board_t &&board,
 			const size_t w,
 			const size_t h,
-			const update_cb_t update_cb,
-			const done_cb_t done_cb) :
-			EngineBase(w, h, update_cb, done_cb), m_board_pair([&]() {
+			const update_cb_t update_cb) :
+			EngineBase(w, h, update_cb), m_board_pair([&]() {
 				if constexpr (BoardConstructibleBySize<board_t>) {
 					return decltype(m_board_pair){ std::move(board), board_t(board.size()) };
 				} else {
@@ -76,7 +75,7 @@ public:
 							return 0 <= nx && nx < W && 0 <= ny && ny < H && at(curr_board, nx, ny);
 						}
 					}();
-					
+
 					if (is_neighbor_alive) {
 						++count;
 					}
@@ -99,7 +98,6 @@ public:
 		}
 
 		m_board ^= 1;
-		m_done_cb();
 	}
 
 	state_t get_state(size_t i, size_t j) override {
