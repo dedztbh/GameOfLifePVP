@@ -11,9 +11,9 @@ public:
 	using state_t = uint8_t;
 	using update_cb_t = std::function<void(size_t, size_t, uint8_t)>;
 
-	EngineBase(const size_t w,
-			const size_t h,
-			const update_cb_t update_cb) :
+	EngineBase(size_t w,
+			size_t h,
+			update_cb_t update_cb) :
 			W(w), H(h), m_update_cb(update_cb) {}
 
 	virtual ~EngineBase() = default;

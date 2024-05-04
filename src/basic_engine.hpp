@@ -9,23 +9,23 @@
 namespace lifepvp::engine {
 
 template <class T>
-concept BoardConstructibleBySize = requires(T && board) {
+concept BoardConstructibleBySize = requires(T &&board) {
 	T(board.size());
 };
 
 template <class T>
 concept BoardResizable = std::is_default_constructible_v<T> &&
 		requires(T board, size_t x) {
-	board.resize(x);
-};
+			board.resize(x);
+		};
 
 template <class T>
 concept BasicEngineContainer =
 		std::move_constructible<T> &&
-		(BoardResizable<T> || BoardConstructibleBySize<T>)&&requires(T & board, const T &cboard, size_t i) {
-	{ board[i] } -> std::convertible_to<EngineBase::state_t &>;
-	{ cboard[i] } -> std::convertible_to<EngineBase::state_t const &>;
-};
+		(BoardResizable<T> || BoardConstructibleBySize<T>)&&requires(T &board, const T &cboard, size_t i) {
+			{ board[i] } -> std::convertible_to<EngineBase::state_t &>;
+			{ cboard[i] } -> std::convertible_to<EngineBase::state_t const &>;
+		};
 
 struct BasicEngineRuleset {
 	bool wrap_around = false;
@@ -37,9 +37,9 @@ public:
 	using board_t = std::remove_reference_t<T>;
 
 	BasicEngine(board_t &&board,
-			const size_t w,
-			const size_t h,
-			const update_cb_t update_cb) :
+			size_t w,
+			size_t h,
+			update_cb_t update_cb) :
 			EngineBase(w, h, update_cb), m_board_pair([&]() {
 				if constexpr (BoardConstructibleBySize<board_t>) {
 					return decltype(m_board_pair){ std::move(board), board_t(board.size()) };
