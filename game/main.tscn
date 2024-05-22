@@ -77,6 +77,14 @@ offset_bottom = 108.0
 button_pressed = true
 text = "Wrap Around"
 
+[node name="CoopCellButton" type="CheckButton" parent="."]
+offset_left = -193.0
+offset_top = 104.0
+offset_right = -11.0
+offset_bottom = 135.0
+button_pressed = true
+text = "Cooperative Cells"
+
 [node name="RulesLabel" type="Label" parent="."]
 offset_left = -232.0
 offset_top = 49.0

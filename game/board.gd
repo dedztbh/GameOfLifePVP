@@ -22,7 +22,7 @@ func _ready():
 			if init_matrix != null:
 				update_cell(i, j, init_matrix[i * columns + j])
 	
-	life_driver.setup(rows, columns, init_matrix, LifeDriver.BASIC, ruleset)
+	life_driver.setup(rows, columns, init_matrix, LifeDriver.TWO_PLAYER, ruleset)
 	life_driver.auto_run_set_interval(interval_us)
 	life_driver.start_auto_run()
 	emit_signal("speed_changed", 1000000.0 / interval_us)

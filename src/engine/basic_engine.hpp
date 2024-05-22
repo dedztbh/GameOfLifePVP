@@ -22,7 +22,7 @@ concept BoardResizable = std::is_default_constructible_v<T> &&
 template <class T>
 concept BasicEngineContainer =
 		std::move_constructible<T> &&
-		(BoardResizable<T> || BoardConstructibleBySize<T>)&&requires(T &board, const T &cboard, size_t i) {
+		(BoardResizable<T> || BoardConstructibleBySize<T>) && requires(T &board, const T &cboard, size_t i) {
 			{ board[i] } -> std::convertible_to<EngineBase::state_t &>;
 			{ cboard[i] } -> std::convertible_to<EngineBase::state_t const &>;
 		};

@@ -9,14 +9,19 @@ func _ready():
 	board = board_scene.instantiate()
 	board.init_matrix = PackedByteArray()
 	var bytearray = board.init_matrix
-	bytearray.resize(100 * 100)
-	bytearray[0 * 100 + 1] = 1
-	bytearray[1 * 100 + 2] = 1
-	bytearray[2 * 100 + 0] = 1
-	bytearray[2 * 100 + 1] = 1
-	bytearray[2 * 100 + 2] = 1
-	board.rows = 100
-	board.columns = 100
+	bytearray.resize(60 * 60)
+	bytearray[0 * 60 + 1] = 1
+	bytearray[1 * 60 + 2] = 1
+	bytearray[2 * 60 + 0] = 1
+	bytearray[2 * 60 + 1] = 1
+	bytearray[2 * 60 + 2] = 1
+	bytearray[49 * 60 + 48] = 2
+	bytearray[48 * 60 + 47] = 2
+	bytearray[47 * 60 + 49] = 2
+	bytearray[47 * 60 + 48] = 2
+	bytearray[47 * 60 + 47] = 2
+	board.rows = 60
+	board.columns = 60
 	board.speed_changed.connect(board_speed_changed)
 	board.ruleset["wrap_around"] = $WrapAroundButton.button_pressed
 	add_child(board)
@@ -60,6 +65,7 @@ func _on_load_board_dialog_file_selected(path):
 	board.rows = height
 	board.speed_changed.connect(board_speed_changed)
 	board.ruleset["wrap_around"] = $WrapAroundButton.button_pressed
+	board.ruleset["cooperative_cells"] = $CoopCellButton.button_pressed
 	add_child(board)
 
 

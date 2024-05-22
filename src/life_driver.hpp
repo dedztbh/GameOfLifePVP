@@ -7,7 +7,7 @@
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/variant/variant.hpp>
 
-#include "engine_base.hpp"
+#include "engine/engine_base.hpp"
 
 #include "util/recurring_timer.hpp"
 
@@ -22,7 +22,8 @@ public:
 	}
 
 	enum EngineType {
-		BASIC
+		BASIC,
+		TWO_PLAYER
 	};
 
 	void setup(size_t w, size_t h, const Variant &init_board, EngineType engine, const Variant &ruleset);

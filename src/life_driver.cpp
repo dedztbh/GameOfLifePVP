@@ -6,8 +6,9 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/packed_byte_array.hpp>
 
-#include "basic_engine.hpp"
-#include "engine_base.hpp"
+#include "engine/basic_engine.hpp"
+#include "engine/engine_base.hpp"
+#include "engine/two_player_engine.hpp"
 
 using namespace godot;
 
@@ -27,9 +28,9 @@ auto setup_engine_with_ruleset(auto &tup, auto f)
 	requires(0 < I && I <= std::tuple_size_v<std::remove_cvref_t<decltype(tup)>>)
 {
 	if (std::get<I - 1>(tup)) {
-		return setup_engine_with_ruleset<Ruleset, I - 1, bools..., true>(tup, f);
+		return setup_engine_with_ruleset<Ruleset, I - 1, true, bools...>(tup, f);
 	} else {
-		return setup_engine_with_ruleset<Ruleset, I - 1, bools..., false>(tup, f);
+		return setup_engine_with_ruleset<Ruleset, I - 1, false, bools...>(tup, f);
 	}
 }
 
@@ -55,6 +56,27 @@ void LifeDriver::setup(size_t w, size_t h, const Variant &init_board, EngineType
 			const Dictionary &dict = ruleset;
 			auto tup = std::make_tuple<bool>(dict.get(String("wrap_around"), false));
 			setup_engine_with_ruleset<BasicEngineRuleset, std::tuple_size_v<decltype(tup)>>(tup, make_engine);
+		} else {
+			ERR_PRINT("Unknown ruleset type, should be either null or Dictionary");
+		}
+	} else if (engine == TWO_PLAYER) {
+		auto make_engine = [&](auto get_ruleset) {
+			if (init_board.get_type() == Variant::NIL) {
+				m_engine = std::make_unique<TwoPlayerEngine<get_ruleset()>>(std::vector<EngineBase::state_t>(w * h), w, h, update_cell_cb);
+			} else if (init_board.get_type() == Variant::PACKED_BYTE_ARRAY) {
+				m_engine = std::make_unique<TwoPlayerEngine<get_ruleset(), PackedByteArray>>(init_board, w, h, update_cell_cb);
+			} else {
+				ERR_PRINT("Unknown init_board type, should be either null or PackedByteArray");
+			}
+		};
+		if (ruleset.get_type() == Variant::NIL) {
+			make_engine([]() { return TwoPlayerEngineRuleset{}; });
+		} else if (ruleset.get_type() == Variant::DICTIONARY) {
+			const Dictionary &dict = ruleset;
+			auto tup = std::make_tuple<bool>(
+					dict.get(String("wrap_around"), false),
+					dict.get(String("cooperative_cells"), false));
+			setup_engine_with_ruleset<TwoPlayerEngineRuleset, std::tuple_size_v<decltype(tup)>>(tup, make_engine);
 		} else {
 			ERR_PRINT("Unknown ruleset type, should be either null or Dictionary");
 		}
@@ -103,4 +125,5 @@ void LifeDriver::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("consume_updates"), &LifeDriver::consume_updates);
 
 	BIND_ENUM_CONSTANT(BASIC);
+	BIND_ENUM_CONSTANT(TWO_PLAYER);
 }
